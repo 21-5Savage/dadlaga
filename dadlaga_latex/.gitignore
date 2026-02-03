@@ -1,0 +1,51 @@
+# LaTeX build directory
+build/
+
+# LaTeX auxiliary files
+*.aux
+*.lof
+*.log
+*.lot
+*.fls
+*.out
+*.toc
+*.fmt
+*.fot
+*.cb
+*.cb2
+.*.lb
+
+## Bibliography auxiliary files
+*.bbl
+*.bcf
+*.blg
+*-blx.aux
+*-blx.bib
+*.run.xml
+
+## Build tool auxiliary files
+*.fdb_latexmk
+*.synctex
+*.synctex(busy)
+*.synctex.gz
+*.synctex.gz(busy)
+*.pdfsync
+
+## Nomenclature
+*.nlo
+*.nls
+*.nlg
+
+## Algorithm
+*.alg
+*.loa
+
+## Listings
+*.lol
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Keep main.pdf in root
+!main.pdf
