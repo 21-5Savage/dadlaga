@@ -7,7 +7,7 @@ $lualatex = 'lualatex -synctex=1 -interaction=nonstopmode -file-line-error %O %S
 $bibtex_use = 1;
 
 # Clean up extensions
-$clean_ext = 'synctex.gz synctex.gz(busy) aux log fls fdb_latexmk out toc lof lot lol nlo';
+$clean_ext = 'aux log fls fdb_latexmk out toc lof lot lol nlo';
 
-# Copy PDF to root after successful build
-$success_cmd = 'copy /Y build\main.pdf main.pdf';
+# Copy PDF and synctex to root after successful build
+$success_cmd = 'copy /Y build\main.pdf main.pdf && copy /Y build\main.synctex.gz main.synctex.gz';
