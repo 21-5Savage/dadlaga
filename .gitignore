@@ -1,0 +1,49 @@
+# LaTeX auxiliary files
+*.aux
+*.lof
+*.log
+*.lot
+*.fls
+*.out
+*.toc
+*.fmt
+*.fot
+*.cb
+*.cb2
+.*.lb
+
+# LaTeX bibliography files
+*.bbl
+*.bcf
+*.blg
+*-blx.aux
+*-blx.bib
+*.run.xml
+
+# LaTeX intermediate files
+*.dvi
+*.xdv
+*-converted-to.*
+
+# SyncTeX files
+*.synctex
+*.synctex.gz
+*.synctex(busy)
+*.pdfsync
+
+# LaTeX build directory
+build/
+
+# Temporary files
+lualatex*.fls
+*.fdb_latexmk
+*.nlo
+*.nls
+*.ilg
+*.ind
+*.idx
+*.lol
+
+# OS files
+.DS_Store
+Thumbs.db
