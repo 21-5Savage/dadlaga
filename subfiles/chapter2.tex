@@ -1,0 +1,67 @@
+Unitel Group нь дэлхийн хиймэл оюуны ухааны хувьсгалтай ижил түвшинд хөгжих зорилготой. Иймд шинэ технологи болон архитектуруудыг компаны хэрэгцээнд зориулан байнга нэвтрүүлэн ашигладаг.
+
+\section{Agentic AI}
+Agentic architecture нь нэг ёсондоо өөрийгөө тодорхойлдог workflow юм \cite{ibm_agentic} \cite{google_agentic}. Large Language Model (LLM)-ийн огцом хөгжил нь энэ архитехтурын динамик байдлыг хангаж комплекс ажлуудыг програмчлалын аргаар шийдэх боломжийг олгосон.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{../images/workflow.png}
+\caption{Workflow}
+\end{figure}
+
+Workflow нь статик програмчлагдсан бөгөөд зорилго болон зорилго биелүүлэхэд хэрэгцээтэй зүйлсийг тодорхойлох механизм байхгүй.
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{../images/agent.png}
+\caption{Agentic}
+\end{figure}
+
+\section{Model Context Protocol}
+
+Antropic компанийн хөгжүүлсэн тус протокол нь LLM-д tool call хийх боломж олгох хамгийн уян хатан технологи юм. Model Context Protocol ашигласнаар LLM нь гадны өгөгдөлтэй харицах стандарт харилцааны протоколтой болсон. Үүний үр дүнд LLM-ийн модель болгон өөрийн гэсэн tool-тэй байхын оронд нэг tool-ийг олон модель зэрэг ашиглах, өөр хүмүүсийн бэлтгэсэн tool-ийг ашиглах зэрэг боломжууд үүссэн \cite{mcp}. 
+
+\section{Huawei Cloud Stack}
+
+Huawei Cloud Stack (HCS) нь Data Center удирдлагын систем бөгөөд Unitel компани өөрийн Data Center-ээ тус системээр удирддаг бөгөөд нэвтрүүлэлтийн болон хөгжүүлэлт ажлуудыг удирдахад тус системийн тухай мэдлэгтэй байх шаардлагатай байдаг \cite{hcs}. 
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{../images/hcs.png}
+\caption{HCS дээрх системийн зохион байгуулалт}
+\end{figure}
+
+
+\subsection{Elastic Compute Service}
+HCS-ийн Elastic Compute Service (ECS) нь AWS-ийн EC2-тэй дүйх бөгөөд аливаа сүлжээний subnet дээр орших виртуал машин юм \cite{aws}\cite{hcs}. 
+
+\subsection{Virtual Private Cloud}
+HCS дотор орших тусгаарлагдсан Data Center-ийн дотоод сүлжээ юм. VPC-г зөв зохион байгуулах нь цаашид хандалтыг хязгаарлах, бусад гадны сүлжээтэй харилцах гэх мэт боломжуудыг олгоно \cite{hcs}.
+
+\subsection{Virtual Private Network}
+VPC-ийн дотоод сүлжээ нь гадны дотоод сүлжээтэй холбогдохын тулд VPN холболт үүсгэх шаардлагатай байдаг \cite{hcs}.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{../images/vpn.png}
+\caption{VPN холболтын диаграм}
+\end{figure}
+
+\section{Langfuse}
+
+Langfuse нь LLM дээр суурилсан системүүдийн ажиглалт, хяналт болон гүйцэтгэлийн шинжилгээнд зориулагдсан open-source платформ юм \cite{langfuse}. Agentic AI архитектурын хувьд олон шатлалт reasoning, tool call, decision making процессууд явагддаг тул эдгээрийг бүртгэн хадгалах шаардлага үүсдэг. Langfuse нь prompt, response, latency, token usage зэрэг мэдээллүүдийг цуглуулж, LLM-ийн үйл ажиллагааг бодит орчинд хянах боломжийг олгодог.
+
+Unitel Group-ийн хувьд LLM-д суурилсан системүүдийг үйлдвэрлэлийн орчинд ашиглах үед ил тод байдал, алдааг илрүүлэх, гүйцэтгэлийг оновчлох нь маш чухал. Langfuse нь энэ шаардлагыг хангах хяналтын давхаргыг бүрдүүлж өгдөг.
+
+\section{Gemini}
+
+Gemini нь Google компанийн хөгжүүлсэн Large Language Model юм \cite{gemini}. Тус модельд embeddings үүсгэх фунциональ 2025 онд шинээр нэмэгдсэн.
+
+
+Gemini embedding нь текстийг 3072 хэмжээстэй вектор болгон хувиргадаг. 
+Agentic AI архитектурын хүрээнд embeddings-ийг ашигласнаар систем нь хадгалагдсан мэдлэгтэй уялдуулан шийдвэр гаргах боломж бүрддэг. Энэ нь workflow-оос agentic архитектурт шилжихэд шаардлагатай контекстийн ойлголтыг хангана.
+
+\section{AWS Cohere}
+
+Cohere нь Large Language Model болон embeddings үйлчилгээ үзүүлэгч бөгөөд AWS орчинд ашиглах боломжтойгоороо онцлог юм \cite{cohere}.
+
+Unitel Group саяхныг хүртэл Cohere Multilingual v3 embedding моделийг ашигладаг байсан бөгөөд 2026 онд хийсэн туршилт дээр үндэслэн Cohere-ийг fallback модель, харин gemini-г үндсэн модель болгон шилжүүлсэн.

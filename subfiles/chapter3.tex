@@ -1,0 +1,84 @@
+\section{Enterprise Resource Planning MCP}
+
+\section{Information Retrieval MCP}
+
+Дадлагын хугацаанд Information Retrieval MCP tool-ийг хариуцсан ажилтны хувьд дараах ажлуудыг хийсэн.
+
+\subsection{Вектор өгөгдлийн сан солих}
+
+Qdrant нь Open-Source вектор өгөгдлийн сан юм \cite{qdrant}. Unitel Chatbot болон бусад RAG технологи ашигладаг системүүдэд AstraDB-ийн Cloud вектор өгөгдлийн санг ашигладаг байсан бол энэ жилээс эхлэн Self-Hosted хувилбар луу шилжих ажил хийгдэж хэд хэдэн вектор өгөгдлийн санг харьцуулснаас Qdrant хамгийн тохиромжтой гэх дүгнэлтэд хүрсэн. Үүнд харгалзаж үзсэн үзүүлэлтүүдийг дурдвал:
+	\begin{itemize}
+		\item Retrieval latency
+		\item Self-Host үнийн санал
+		\item Өөрийн гэсэн User Interface
+		\item Вектор өгөгдлийн сан дээрх хийгдэж болох үйлдлүүд:
+			\begin{itemize}
+				\item Metadata filtering
+				\item Tenant based separation
+				\item Access control
+			\end{itemize}
+	\end{itemize}
+
+Иймд Information Retrieval MCP tool-ийн ашигладаг вектор өгөгдлийн санг солих ажлыг дараах байдлаар солисон.
+
+\begin{figure}[H]
+	\begin{lstlisting}[style=mpython, caption=Qdrant client initialization, frame=single]
+
+	class Qdrant:
+		def __init__(self):
+			settings = get_settings()
+			self.gemini_embedder = GoogleEmbedder().google_embeddings
+			self.cohere_embedder = AWSEmbedder().aws_embeddings
+			self.client = QdrantClient(
+				url=settings.QDRANT_CLIENT_URL,
+				api_key=settings.QDRANT_API_KEY,
+				timeout=20.0  # 60 second timeout for Qdrant operations
+			)
+			self.QDRANT_PROD_MODE=settings.QDRANT_PROD_MODE
+
+	\end{lstlisting}
+\end{figure}
+
+\begin{figure}[H]
+	\begin{lstlisting}[style=mpython, caption=Qdrant client вектор хайлт, frame=single]
+    async def vector_search(self, query: str, filter=None, tenant_id=None, embedding_name=None, top_k: int=10):
+        collection_name = self._qdrant_collection_name(tenant_id=tenant_id, embedding_name=embedding_name)
+        #embded query
+        if embedding_name == "gemini":
+            vec = await self.gemini_embedder.aembed_query(query)
+        else:
+            vec = await self.cohere_embedder.aembed_query(query)
+        hits = self.client.query_points(
+            collection_name=collection_name,
+            query=vec,
+            query_filter=filter,
+            limit=top_k,
+        )
+        return hits
+    def __call__(self, query, filter, top_k=10):
+        self.vector_search(query=query, filter=filter, top_k=top_k)
+
+	\end{lstlisting}
+\end{figure}
+
+\subsection{AWS Cohere}
+
+Энэ онд хийгдэж эхэлсэн ажлуудад вектор өгөгдлийн санг шинэчлэхээс гадна embed хийж буй моделиудыг шинэчлэх мөн fallback модель сонгох ажил багтсан. Өмнө нь AWS-ийн Cohere Multilingual v3 \cite{cohere} модель Монгол хэл дээр хамгийн сайн үр дүн үзүүлсэн тул сүүлийн 2 жилийн турш сонгон ашигласан. Харин хамгийн сүүлд хийсэн туршилтын үр дүнд Gemini Embedding-ийг main моделиор харин Cohere Multilingual v3 fallback моделиор сонгогдсон.
+\subsection{Gemini Embedding}
+
+Google-ийн хөгжүүлсэн gemini-embedding-001 модель нь олон нийтэд 2025 оноос эхлэн нээлттэй болсон \cite{gemini_embed}. Харин Unitel компаны дотооддоо хийсэн туршилтын үр дүнд Монгол хэл дээр хамгийн сайн үр дүн үзүүлсэн. Туршилтаар embedding моделиудыг:
+	\begin{itemize}
+		\item Хайлтын хурд
+		\item Хайлтын оновчтой байдал
+	\end{itemize}
+гэсэн хоёр үзүүлэлтүүдэд тулгуурлан дүгнэсэн.
+\section{Agent Skill}
+\section{TV content data entry automation}
+
+\section{Huawei Cloud Stack}
+\subsection{Development server}
+\subsection{Production server}
+\subsection{Peering}
+\subsection{VPN connection}
+
+\section{Deployment infrastructure}
