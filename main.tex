@@ -7,6 +7,8 @@
 \setmainfont[Ligatures=TeX]{Times New Roman}
 \setsansfont{Arial}
 
+\usepackage{microtype}
+
 % \usepackage[utf8x]{inputenc}
 % \usepackage[mongolian]{babel}
 %\usepackage{natbib}
@@ -83,10 +85,31 @@
     tabsize=4
 }
 
+\lstdefinestyle{yaml}{
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue}\bfseries,
+    stringstyle=\color{red},
+    commentstyle=\color{gray}\itshape,
+    numberstyle=\tiny\color{gray},
+    numbers=left,
+    stepnumber=1,
+    frame=single,
+    breaklines=true,
+    showstringspaces=false,
+    tabsize=2,
+    captionpos=b,
+    morecomment=[l]{\#},
+    morestring=[b]',
+    morestring=[b]"
+}
+
 \let\oldabs\abs
 \def\abs{\@ifstar{\oldabs}{\oldabs*}}
 \makenomenclature
 \begin{document}
+
+\sloppy
+\emergencystretch=1em
 
 
 %----------------------------------------------------------------------------------------

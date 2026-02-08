@@ -1,12 +1,86 @@
 \section{Enterprise Resource Planning MCP}
 
+Unitel компанийн ажилтны AI туслах нь Enterprise Resource Planning (ERP) системээс мэдээлэл татах чадвартай. Энэ нь AI туслах ажилтанд ээлжийн амралтын үлдсэн хоног, хэзээ амралтаа авч болох, илүү цагийн эсвэл хоцролтын мэдээллийг хүргэх гэх мэт боломжуудыг бүрдүүлж өгдөг.
+
+Миний бие дадлагын хугацаанд ERP MCP server-ийг хариуцан ажилласан бөгөөд хийгдсэн ажлуудыг дурдвал:
+\begin{itemize}
+	\item Шинэ API call хийх tool хэрэгжүүлэх.
+	\item Шаардлагатай сайжруулалтуудыг цаг тухайд нь хийж гүйцэтгэх. 
+\end{itemize}
+
+	\begin{lstlisting}[language=Python, caption=Бусад ажилчдын мэдээллийг хайх tool-ийн хэрэгжүүлэлт, frame=single]
+def get_user_info(
+        self, employee_domain: str = None, first_name: str = None, last_name: str = None
+    ) -> str:
+
+	# Preprocessing checks
+	if not employee_domain and not (first_name and last_name):
+	...
+	# criteria building logic
+	criteria = {}
+	if employee_domain:
+		...
+	payload = {
+		...
+		"criteria": criteria
+	}
+
+	# response parsing logic
+	try:
+		response = self.send_request(payload, 10)
+	except requests.RequestException as e:
+		...
+	try:
+		...
+	except (KeyError, TypeError):
+		...
+
+	result = result["0"]
+	json_string = json.dumps(result, ensure_ascii=False, indent=2)
+
+	return json_string
+	\end{lstlisting}
+
+	ERP системтэй холбогдох холболтыг session байдлаар шийдсэн бөгөөд ингэснээр TLS handshake болон TCP холболтууд хүсэлт болгон дээр үүсэх шаардлагагүй болсон.
+
+	\begin{lstlisting}[language=Python, caption=Request session үүсгэж буй логик, frame=single]
+def __init__(self):
+	...
+	self.session = self._create_session()
+def _create_session(self):
+	session = requests.Session()
+	retries = requests.adapters.Retry(
+		total=2,
+		backoff_factor=0.5,
+		status_forcelist=[500, 502, 503, 504],)
+	adapter = requests.adapters.HTTPAdapter(max_retries=retries)
+	session.mount("http://", adapter)
+	session.mount("https://", adapter)
+	return session
+	\end{lstlisting}
+
+	\begin{lstlisting}[language=Python, caption=Session ашиглаж буй POST request-ийн wrapper, frame=single]
+def send_request(self, payload: dict, timeout: int):
+	try:
+		return self.session.post(
+			self.ERP_URL,
+			headers=self.ERP_HEADERS,
+			data=json.dumps(payload),
+			verify=False,
+			timeout=timeout,
+		)
+	except requests.RequestException as e:
+		logger.error(f"[send_request] ERP request failed after retries: {e}")
+		raise
+	\end{lstlisting}
+
 \section{Information Retrieval MCP}
 
 Дадлагын хугацаанд Information Retrieval MCP tool-ийг хариуцсан ажилтны хувьд дараах ажлуудыг хийсэн.
 
 \subsection{Вектор өгөгдлийн сан солих}
 
-Qdrant нь Open-Source вектор өгөгдлийн сан юм \cite{qdrant}. Unitel Chatbot болон бусад RAG технологи ашигладаг системүүдэд AstraDB-ийн Cloud вектор өгөгдлийн санг ашигладаг байсан бол энэ жилээс эхлэн Self-Hosted хувилбар луу шилжих ажил хийгдэж хэд хэдэн вектор өгөгдлийн санг харьцуулснаас Qdrant хамгийн тохиромжтой гэх дүгнэлтэд хүрсэн. Үүнд харгалзаж үзсэн үзүүлэлтүүдийг дурдвал:
+Unitel Chatbot болон бусад RAG технологи ашигладаг системүүдэд AstraDB-ийн Cloud вектор өгөгдлийн санг ашигладаг байсан бол 2026 оноос эхлэн Self-Hosted хувилбар луу шилжих ажил хийгдэж хэд хэдэн вектор өгөгдлийн санг харьцуулснаас Qdrant хамгийн тохиромжтой гэх дүгнэлтэд хүрсэн. Үүнд харгалзаж үзсэн үзүүлэлтүүдийг дурдвал:
 	\begin{itemize}
 		\item Retrieval latency
 		\item Self-Host үнийн санал
@@ -19,10 +93,10 @@ Qdrant нь Open-Source вектор өгөгдлийн сан юм \cite{qdrant
 			\end{itemize}
 	\end{itemize}
 
-Иймд Information Retrieval MCP tool-ийн ашигладаг вектор өгөгдлийн санг солих ажлыг дараах байдлаар солисон.
+Иймд Information Retrieval MCP tool-ийн ашигладаг вектор өгөгдлийн санг солих ажлыг дараах байдлаар сольсон.
 
 \begin{figure}[H]
-	\begin{lstlisting}[style=mpython, caption=Qdrant client initialization, frame=single]
+	\begin{lstlisting}[language=Python, caption=Qdrant client initialization, frame=single]
 
 	class Qdrant:
 		def __init__(self):
@@ -40,7 +114,7 @@ Qdrant нь Open-Source вектор өгөгдлийн сан юм \cite{qdrant
 \end{figure}
 
 \begin{figure}[H]
-	\begin{lstlisting}[style=mpython, caption=Qdrant client вектор хайлт, frame=single]
+	\begin{lstlisting}[language=Python, caption=Qdrant client вектор хайлт, frame=single]
     async def vector_search(self, query: str, filter=None, tenant_id=None, embedding_name=None, top_k: int=10):
         collection_name = self._qdrant_collection_name(tenant_id=tenant_id, embedding_name=embedding_name)
         #embded query
@@ -61,24 +135,153 @@ Qdrant нь Open-Source вектор өгөгдлийн сан юм \cite{qdrant
 	\end{lstlisting}
 \end{figure}
 
-\subsection{AWS Cohere}
+\subsection{Embedding модель солих}
+\subsubsection{Cohere}
+2026 онд хийгдэж эхэлсэн ажлуудад вектор өгөгдлийн санг шинэчлэхээс гадна embed хийж буй моделиудыг шинэчлэх мөн fallback модель сонгох ажил багтсан. Өмнө нь AWS-ийн Cohere Multilingual v3 \cite{cohere} модель Монгол хэл дээр хамгийн сайн үр дүн үзүүлсэн тул сүүлийн 2 жилийн турш сонгон ашигласан. 
 
-Энэ онд хийгдэж эхэлсэн ажлуудад вектор өгөгдлийн санг шинэчлэхээс гадна embed хийж буй моделиудыг шинэчлэх мөн fallback модель сонгох ажил багтсан. Өмнө нь AWS-ийн Cohere Multilingual v3 \cite{cohere} модель Монгол хэл дээр хамгийн сайн үр дүн үзүүлсэн тул сүүлийн 2 жилийн турш сонгон ашигласан. Харин хамгийн сүүлд хийсэн туршилтын үр дүнд Gemini Embedding-ийг main моделиор харин Cohere Multilingual v3 fallback моделиор сонгогдсон.
-\subsection{Gemini Embedding}
+\subsubsection{Gemini Embedding}
+Google-ийн хөгжүүлсэн gemini-embedding-001 модель нь олон нийтэд 2025 оноос эхлэн нээлттэй болсон \cite{gemini_embed}.
 
-Google-ийн хөгжүүлсэн gemini-embedding-001 модель нь олон нийтэд 2025 оноос эхлэн нээлттэй болсон \cite{gemini_embed}. Харин Unitel компаны дотооддоо хийсэн туршилтын үр дүнд Монгол хэл дээр хамгийн сайн үр дүн үзүүлсэн. Туршилтаар embedding моделиудыг:
+Unitel компани дотооддоо нээлттэй embedding моделиуд дээр
 	\begin{itemize}
 		\item Хайлтын хурд
 		\item Хайлтын оновчтой байдал
 	\end{itemize}
-гэсэн хоёр үзүүлэлтүүдэд тулгуурлан дүгнэсэн.
-\section{Agent Skill}
+гэсэн хоёр үзүүлэлтүүдэд тулгуурласан туршилт хийсэн. Туршилтын үр дүнд Gemini Embedding хамгийн хурдан бөгөөд оновчтой ажиллсан тул үндсэн моделиор сонгогдож, харин Cohere Multilingual v3 fallback моделиор сонгогдсон.
+
+\begin{figure}[H]
+	\begin{lstlisting}[language=Python, caption=Cohere Embedding client, frame=single]
+class AWSEmbedder:
+    def __init__(self):
+        settings = get_settings()
+        self.aws_embeddings = BedrockEmbeddings(
+            client=AWSClient().aws_client_embed,
+            region_name=settings.AWS_REGION,
+            model_id=settings.AWS_COHERE_MODEL_NAME,
+            normalize=False,
+            model_kwargs={"input_type": "clustering"},
+        )
+	\end{lstlisting}
+\end{figure}
+
+\begin{figure}[H]
+	\begin{lstlisting}[language=Python, caption=Gemini Embedding client, frame=single]
+class GoogleEmbedder:
+    def __init__(self):
+        settings = get_settings()
+        # Create httpx client with timeout
+        http_client = httpx.Client(
+            timeout=httpx.Timeout(20.0, connect=15.0)
+        )
+        self.google_embeddings = GoogleGenerativeAIEmbeddings(
+            model=settings.GOOGLE_EMBEDDING_MODEL_NAME,
+            api_key=settings.GOOGLE_GEMINI_API_KEY,
+            client=http_client,
+        )
+	\end{lstlisting}
+\end{figure}
+
+
+\begin{figure}[H]
+	\begin{lstlisting}[language=Python, caption=Embedding модель fallback логик, frame=single]
+        async def vector_search(self, query: str, filter=None, tenant_id=None, embedding_name=None, top_k: int=10):
+
+        collection_name = self._qdrant_collection_name(tenant_id=tenant_id, embedding_name=embedding_name)
+
+        #embded query
+        if embedding_name == "gemini":
+            vec = await self.gemini_embedder.aembed_query(query)
+        else:
+            vec = await self.cohere_embedder.aembed_query(query)
+
+        hits = self.client.query_points(
+            collection_name=collection_name,
+            query=vec,
+            query_filter=filter,
+            limit=top_k,
+        )
+        return hits
+	\end{lstlisting}
+\end{figure}
+
 \section{TV content data entry automation}
+Unitel компанийн охин компани болох Univision компани нь ,,, үйлчилгээ үзүүлдэг. Univision компанитай гэрээтэй сувгуудын хөтөлбөрийг гараар системд бүртгэн, хянаж оруулдаг. Миний бие дадлагын ажлын хугацаанд тус системийн өгөгдөл цэвэрлэх системд шаардлагатай сайжруулалтуудыг цаг тухайд нь гүйцэтгэн ажилласан.
 
 \section{Huawei Cloud Stack}
-\subsection{Development server}
-\subsection{Production server}
-\subsection{Peering}
-\subsection{VPN connection}
+Unitel компани Data Center-ээ Huawei Cloud Stack (HCS) ашиглан удирддаг. HCS нь функциональ талаасаа AWS-тэй ижил үүрэг гүйцэтгэдэг \cite{hcs}\cite{aws}.
 
+Дижитал трансформейшны газарт 2026 оноос эхлэн Unitel компанийн Data Center руу өөрсдийн Local Production болон Local Development орчноо шилжүүлэх ажил явагдаж байгаа. Дадлагын ажлын хүрээнд тус системийг төлөвлөгөөний дагуу байгуулах ажлыг гүйцэтгэсэн болно. 
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{../images/hcs.png}
+\caption{HCS дээрх системийн зохион байгуулалт}
+\end{figure}
+
+
+\subsection{Development server дээр хийгдсэн ажлууд}
+Development server-т шаардлагын дагуу хийгдсэн ажлууд:
+\begin{itemize}
+	\item Rootless docker суулгах
+	\item Хэлтсийн гишүүн бүрд user үүсгэж анхны тохиргоо хийх.
+	\item Common user тохируулах.
+	\item System disk хэмжээ ихэсгэх.
+	\item Development server-ээс гарах интернэт холболт үүсгэх.
+	\item Development server-т оффисын сүлжээнээс ирэх хандалтыг нээх. 
+	\item Development server-ийг бусад дотоод сүлжээтэй холбох.
+	\item Template devcontainer орчин бэлдэх.
+	\item Development server ашиглах болон дахин тохиргоо хийх талаар documentation бичих.
+	\item Бусад шаардлагатай software суулгах.
+\end{itemize}
+\subsection{Production server-үүд дээр хийгдсэн ажлууд}
+Production server-т шаардлагын дагуу хийгдсэн ажлууд:
+\begin{itemize}
+	\item Project бүрд тусгаарлагдсан server үүсгэх.
+	\item Server бүрд Rootful Docker суулгах.
+	\item Server бүрд хандах шаардлагатай дотоод болон гадаад сүлжээ рүү хандалт нээж өгөх.
+	\item System disk хэмжээ ихэсгэх.
+	\item Data disk attach хийх.
+	\item Production server-ээс гарах интернэт холболт үүсгэх.
+	\item Common user тохируулах.
+	\item ШИнэ Production server үүсгэх болон дахин тохируулах талаар documentation бичих
+\end{itemize}
 \section{Deployment infrastructure}
+Дата Сайнсын хэлтэс дотоод болон бусад баг, хэлтэст зориулан хөгжүүлсэн 20 орчим production repository-г удирддаг. Тэдгээрийн deployment процессыг автоматжуулах буюу workflow definition script-ийг бичих зааварчилгааг боловсруулах ажлыг миний бие хариуцдаг. 
+
+Deployment infrastructure-ийн ерөнхий зохион байгуулалт:
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{../images/cd.png}
+\caption{Deployment infrastructure диаграм}
+\end{figure}
+
+Дадлагын ажлын хүрээнд deployment infrastructure-т хийгдсэн ажлууд:
+\begin{itemize}
+	\item Agentic Assistant repository олон deployment file-тай байгааг нэгтгэж parameter-аар шийдэх.
+	\item Шинээр deployment хийгдэх repository-ийг deployment script-ийг үүсгэх documentation бичих. 
+	\begin{itemize}
+		\item Google Cloud Platform талаас хийгдэх тохиргоо
+		\item Github талаас хийгдэх тохиргоо
+		\item Self runner host хийж буй server талаас хийгдэх тохиргоо.
+	\end{itemize}
+\end{itemize}
+
+\begin{figure}[H]
+	\begin{lstlisting}[style=yaml, caption=Deployment script-ийг input-ээр удирдах script, frame=single]
+on:
+workflow_dispatch:
+	inputs:
+	target:
+		description: "Where to deploy"
+		required: true
+		default: all
+		type: choice
+		options:
+		- all
+		- production
+		- staging
+		...
+
+	\end{lstlisting}
+
+\end{figure}

@@ -1,0 +1,52 @@
+<mxfile host="65bd71144e">
+    <diagram id="GL10np92PI_8QdxBCOlz" name="Page-1">
+        <mxGraphModel dx="467" dy="469" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="30" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=light-dark(#000000,#000000);" parent="1" vertex="1">
+                    <mxGeometry y="390" width="550" height="530" as="geometry"/>
+                </mxCell>
+                <mxCell id="29" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeWidth=2;strokeColor=light-dark(#FFFFFF,#FFFFFF);fontColor=light-dark(#FFFFFF,#FFFFFF);dashed=1;" parent="1" vertex="1">
+                    <mxGeometry x="80" y="410" width="405" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="48" style="edgeStyle=none;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=light-dark(#FFFFFF,#FFFFFF);" edge="1" parent="1" source="21" target="43">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="21" value="Repository" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeWidth=2;strokeColor=light-dark(#FFFFFF,#FFFFFF);fontColor=light-dark(#FFFFFF,#FFFFFF);fontSize=24;" parent="1" vertex="1">
+                    <mxGeometry x="200" y="440" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="42" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeWidth=2;strokeColor=light-dark(#FFFFFF,#FFFFFF);fontColor=light-dark(#FFFFFF,#FFFFFF);dashed=1;" vertex="1" parent="1">
+                    <mxGeometry x="80" y="595" width="405" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="49" style="edgeStyle=none;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=light-dark(#FFFFFF,#FFFFFF);" edge="1" parent="1" source="43" target="44">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="43" value="Cloud Build" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeWidth=2;strokeColor=light-dark(#FFFFFF,#FFFFFF);fontColor=light-dark(#FFFFFF,#FFFFFF);fontSize=24;" vertex="1" parent="1">
+                    <mxGeometry x="200" y="625" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="50" style="edgeStyle=none;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=light-dark(#FFFFFF,#FFFFFF);startArrow=classic;startFill=1;endArrow=none;endFill=0;" edge="1" parent="1" source="44" target="47">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="44" value="Artifact Registry" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeWidth=2;strokeColor=light-dark(#FFFFFF,#FFFFFF);fontColor=light-dark(#FFFFFF,#FFFFFF);fontSize=24;" vertex="1" parent="1">
+                    <mxGeometry x="340" y="625" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="45" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeWidth=2;strokeColor=light-dark(#FFFFFF,#FFFFFF);fontColor=light-dark(#FFFFFF,#FFFFFF);dashed=1;" vertex="1" parent="1">
+                    <mxGeometry x="80" y="780" width="405" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="47" value="Github runner" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeWidth=2;strokeColor=light-dark(#FFFFFF,#FFFFFF);fontColor=light-dark(#FFFFFF,#FFFFFF);fontSize=24;" vertex="1" parent="1">
+                    <mxGeometry x="340" y="810" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="51" value="Github" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=22;fontColor=light-dark(#FFFFFF,#FFFFFF);" vertex="1" parent="1">
+                    <mxGeometry x="110" y="455" width="60" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="52" value="GCP" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=22;fontColor=light-dark(#FFFFFF,#FFFFFF);" vertex="1" parent="1">
+                    <mxGeometry x="110" y="640" width="60" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="53" value="Server" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=22;fontColor=light-dark(#FFFFFF,#FFFFFF);" vertex="1" parent="1">
+                    <mxGeometry x="110" y="830" width="60" height="30" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
